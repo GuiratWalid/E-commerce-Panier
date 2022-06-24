@@ -1,3 +1,4 @@
+import { areArraysEqual } from "@mui/base";
 import { createSlice } from "@reduxjs/toolkit";
 
 const cartSlice = createSlice({
@@ -7,9 +8,16 @@ const cartSlice = createSlice({
         totalQuantity: 0,
         totalPrice: 0,
         showCart: false,
+        changed: false,
     },
     reducers: {
+        replaceData(state, action) {
+            state.totalQuantity = action.payload.totalQuantity;
+            state.totalPrice = action.payload.totalPrice;
+            state.itemsList = action.payload.itemsList;
+        },
         addToCart(state, action) {
+            state.changed = true;
             const newItem = action.payload;
             // Item is already available
             const existingItem = state.itemsList.find(item => item.id === newItem.id);
@@ -30,6 +38,7 @@ const cartSlice = createSlice({
             state.totalPrice += newItem.price;
         },
         removeFromCart(state, action) {
+            state.changed = true;
             const id = action.payload;
 
             const existingItem = state.itemsList.find(item => item.id === id);
